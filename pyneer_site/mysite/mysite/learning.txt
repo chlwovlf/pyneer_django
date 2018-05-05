@@ -1,0 +1,50 @@
+여기는 하위 mysite 디렉토리이다. 여기가 바로 project directory이다.
+여기가 중요하다.
+
+* settings.py를 보면
+- 1. DATABASES: default db로 sqlite3를 쓴다.
+- 2. TEMPLATES: DIR만 바꾸고 나머지는 변경하지 않는다. DIRS는 프로젝트 템플릿 파일이 위치한 디렉토리를 지정한다.
+템플릿을 찾을 때, 프로젝트 템플릿 디렉터리는 애플리케이션 템플릿 디렉터리보다 먼저 검색한다.
+- 3. STATICFILES_DIRS: 프로젝트 정적파일이 위치한 곳을 지정. 수동으로 직접함. 나중에 함.
+- 4. TIME_ZONE: 'Asia/Seoul'로 변경. 원래 UTC임.
+- 5. MEDIA: 미디어 관련 사항. 파일 업로드 개발할 때 필요하다. 일단 냅둠.
+- 6. INSTALLED_APPS: 개발하고 이ㅆ는 애플리케이션을 설정파일에 등록. 나중에 함.
+- 7. LANGUAGE_CODE: 'ko-kr' 하면 admin사이트의 메뉴 및 설명이 한글로 나옴. 난 걍 영어로 함.
+
+- settings와 친해지도록 하자.
+
+
+* 기본테이블 생성을 해줘야 함.
+- 프로젝트 디렉토리가 아닌 상위 mysite디렉토리에서 $ python manage.py migrate 해줌.
+왜 아직 DB를 만들지도 않았는데 이 짓을 할까?
+장고는 모든 웹 프로젝트 개발 시 사용자와 사용자 권한 그룹 테이블이 반드시 필요하다는 가정 하에 설계되었음.
+그래서 전혀 테이블 만들지 않더라도 이걸 해줘야 함.
+이거 하면 db.splite3가 생긴다.
+
+* superuser 생성.
+- 이제 admin사이트에 로그인하기 위한 관리자(superuser)을 만들어보자. $ python manage.py createsuperuser
+jaepil / wovlf123
+
+* application 생성
+- 예제로 만들 북마크 앱을 만드는 명령을 실행하자.
+- $ python manage.py startapp bookmark
+- bookmark 폴더(모듈/앱)이 생겼다.
+
+* application 등록
+- 모든 app은 설정파일에 지정되어야 한다. 즉, settings.py에 등록해야 한다.
+- 간단히 앱 모듈명인 bookmark만 등록해도 되지만, 앱의 설정 클래스로 등록하는게 더 정확한 방법이다.
+
+* 북마크 앱을 위해 테이블을 하나 만들자.
+- models.py에 정의한다.
+- admin.py도 바꿔준다. 그래야 admin에 테이블이 반영된다.
+- 이와 같이, 테이블 새로 만들 때는 models.py와 admin.py 둘 다 바꿔야 함.
+- 그리고 이 DB 변경사항을 반영해줘야 한다. 아직은 정의만 한 상태이기 때문이다.
+$ python manage.py makemigrations
+$ python manage.py migrate
+- 이러고 나서 :8000/admin 들어가보면 잘 나오는걸 볼수 있다.
+
+* URLconf
+- 원래 urls.py를 프로젝트 디렉토리와 상위 디렉토리 둘 다 만드는게 원칙인데 일단 여기선 프로젝트 디렉토리에서만 하자.
+- 그런데 찾아보니, 2.0에서부턴 path로 url이 대체된다. path가 더 편하다고 한다. url은 앞으로 지원 중단 예정.
+-
+
