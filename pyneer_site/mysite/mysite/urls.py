@@ -20,3 +20,5 @@ from bookmark.views import * # 뷰를 import함.
 urlpatterns = [
     path('admin/', admin.site.urls),
 ]
+
+#!
