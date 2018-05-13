@@ -27,7 +27,11 @@ function global:deactivate ([switch]$NonDestructive) {
 
 deactivate -nondestructive
 
+<<<<<<< HEAD
 $env:VIRTUAL_ENV="C:\Users\chlje\PycharmProjects\pyneer_django\venv"
+=======
+$env:VIRTUAL_ENV="C:\Users\Jaepil\PycharmProjects\pyneer_django\venv"
+>>>>>>> 17cfaeba2231324d55444621587033e860c1f9ae
 
 if (! $env:VIRTUAL_ENV_DISABLE_PROMPT) {
     # Set the prompt to include the env name

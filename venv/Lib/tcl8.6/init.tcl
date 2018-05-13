@@ -16,7 +16,11 @@
 if {[info commands package] == ""} {
     error "version mismatch: library\nscripts expect Tcl version 7.5b1 or later but the loaded version is\nonly [info patchlevel]"
 }
+<<<<<<< HEAD
 package require -exact Tcl 8.6.7
+=======
+package require -exact Tcl 8.6.6
+>>>>>>> 17cfaeba2231324d55444621587033e860c1f9ae
 
 # Compute the auto path to use in this interpreter.
 # The values on the path come from several locations:
@@ -169,7 +173,17 @@ if {[interp issafe]} {
 
     namespace eval ::tcl::clock [list variable TclLibDir $::tcl_library]
 
+<<<<<<< HEAD
     proc ::tcl::initClock {} {
+=======
+    proc clock args {
+	namespace eval ::tcl::clock [list namespace ensemble create -command \
+		[uplevel 1 [list namespace origin [lindex [info level 0] 0]]] \
+		-subcommands {
+		    add clicks format microseconds milliseconds scan seconds
+		}]
+
+>>>>>>> 17cfaeba2231324d55444621587033e860c1f9ae
 	# Auto-loading stubs for 'clock.tcl'
 
 	foreach cmd {add format scan} {
@@ -180,9 +194,14 @@ if {[interp issafe]} {
 	    }
 	}
 
+<<<<<<< HEAD
 	rename ::tcl::initClock {}
     }
     ::tcl::initClock
+=======
+	return [uplevel 1 [info level 0]]
+    }
+>>>>>>> 17cfaeba2231324d55444621587033e860c1f9ae
 }
 
 # Conditionalize for presence of exec.
@@ -284,9 +303,20 @@ proc unknown args {
 		    }
 		    append cinfo ...
 		}
+<<<<<<< HEAD
 		set tail "\n    (\"uplevel\" body line 1)\n    invoked\
 			from within\n\"uplevel 1 \$args\""
 		set expect "$msg\n    while executing\n\"$cinfo\"$tail"
+=======
+		append cinfo "\"\n    (\"uplevel\" body line 1)"
+		append cinfo "\n    invoked from within"
+		append cinfo "\n\"uplevel 1 \$args\""
+		#
+		# Try each possible form of the stack trace
+		# and trim the extra contribution from the matching case
+		#
+		set expect "$msg\n    while executing\n\"$cinfo"
+>>>>>>> 17cfaeba2231324d55444621587033e860c1f9ae
 		if {$errInfo eq $expect} {
 		    #
 		    # The stack has only the eval from the expanded command
@@ -300,6 +330,7 @@ proc unknown args {
 		# Stack trace is nested, trim off just the contribution
 		# from the extra "eval" of $args due to the "catch" above.
 		#
+<<<<<<< HEAD
 		set last [string last $tail $errInfo]
 		if {$last + [string length $tail] != [string length $errInfo]} {
 		    # Very likely cannot happen
@@ -326,6 +357,23 @@ proc unknown args {
 			    -errorinfo [string range $errInfo 0 $last-1] $msg
 		}
 		return -options $opts $msg
+=======
+		set expect "\n    invoked from within\n\"$cinfo"
+		set exlen [string length $expect]
+		set eilen [string length $errInfo]
+		set i [expr {$eilen - $exlen - 1}]
+		set einfo [string range $errInfo 0 $i]
+		#
+		# For now verify that $errInfo consists of what we are about
+		# to return plus what we expected to trim off.
+		#
+		if {$errInfo ne "$einfo$expect"} {
+		    error "Tcl bug: unexpected stack trace in \"unknown\"" {} \
+			[list CORE UNKNOWN BADTRACE $einfo $expect $errInfo]
+		}
+		return -code error -errorcode $errCode \
+			-errorinfo $einfo $msg
+>>>>>>> 17cfaeba2231324d55444621587033e860c1f9ae
 	    } else {
 		dict incr opts -level
 		return -options $opts $msg
